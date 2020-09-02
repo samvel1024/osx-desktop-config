@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo Hello > /tmp/hello
+
+
+yabai -m config layout bsp
+yabai -m config window_placement second_child
+
+
+WG=7
+yabai -m config top_padding    $WG
+yabai -m config bottom_padding $WG
+yabai -m config left_padding   $WG
+yabai -m config right_padding  $WG
+yabai -m config window_gap     $WG
+
+yabai -m config mouse_modifier fn
+yabai -m config mouse_action1 resize
+yabai -m config mouse_action2 move
+
+yabai -m config window_opacity off
+yabai -m config active_window_opacity 1.0
+yabai -m config normal_window_opacity 0.7
+
+yabai -m rule --add app="^System Preferences$" manage=off
+

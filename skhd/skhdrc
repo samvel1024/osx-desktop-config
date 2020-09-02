@@ -1,0 +1,62 @@
+#change focus
+rctrl - j : yabai -m window --focus west || source ~/.config/skhd/helper.sh && switch_display
+rctrl - k : yabai -m window --focus south || source ~/.config/skhd/helper.sh && switch_next_workspace
+rctrl - i : yabai -m window --focus north || source ~/.config/skhd/helper.sh && switch_prev_workspace
+rctrl - l : yabai -m window --focus east || source ~/.config/skhd/helper.sh && switch_display
+
+#swap windows in tile layout
+shift + rctrl - j : yabai -m window --warp west
+shift + rctrl - k : yabai -m window --warp south
+shift + rctrl - i : yabai -m window --warp north
+shift + rctrl - l : yabai -m window --warp east
+
+#resize windows
+rctrl + alt - j : \
+    yabai -m window --resize left:-100:0 ; \
+    yabai -m window --resize right:-100:0
+
+rctrl + alt - k : \
+    yabai -m window --resize bottom:0:100 ; \
+    yabai -m window --resize top:0:100
+
+rctrl + alt - i : \
+    yabai -m window --resize top:0:-100 ; \
+    yabai -m window --resize bottom:0:-100
+
+rctrl + alt - l : \
+    yabai -m window --resize right:100:0 ; \
+    yabai -m window --resize left:100:0
+
+#toggle split direction
+rctrl - space : yabai -m window --toggle split
+
+#move window to next/previous workspace
+shift + lctrl - i : source ~/.config/skhd/helper.sh && moveto_prev_workspace
+shift + lctrl - k : source ~/.config/skhd/helper.sh && moveto_next_workspace
+#move window to left/right monitor
+shift + lctrl - l : source ~/.config/skhd/helper.sh && moveto_next_display
+shift + lctrl - j : source ~/.config/skhd/helper.sh && moveto_next_display
+
+
+#move workspace
+#shift + lctrl + alt - i : yabai -m space --move prev
+#shift + lctrl + alt - k : yabai -m space --move next
+
+#focus workspaces
+lctrl - k : source ~/.config/skhd/helper.sh && switch_next_workspace
+lctrl - i : source ~/.config/skhd/helper.sh && switch_prev_workspace
+
+
+rctrl - r : yabai -m space --balance
+rctrl - o: yabai -m window --toggle float
+rctrl - f: yabai -m window --toggle native-fullscreen
+
+
+rctrl - q : 
+    /usr/bin/env osascript <<< \
+        "display notification \"Restarting Yabai\" with title \"Yabai\""; \
+    launchctl kickstart -k "gui/${UID}/homebrew.mxcl.yabai"; \
+    pkill limelight
+
+shift + lctrl - s : CURR=$(cliclick p:.) && cliclick m:0,0 m:"$CURR"
+rctrl - a : source ~/.config/skhd/helper.sh && switch_audio_output
