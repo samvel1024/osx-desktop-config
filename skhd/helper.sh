@@ -22,16 +22,18 @@ function current_workspace_index() {
 
 function switch_next_workspace() {
   CURR_WS=$(current_workspace_index)
+  CURRENT_DISPLAY=$(yabai -m query --spaces --space | jq -c ".display")
   #selects next nonempty index
-  NEXT_WS=$(yabai -m query --spaces | jq -c "[.[] | select ((.windows | length > 0) and .index > ${CURR_WS}) | .index ] | .[0]")
+  NEXT_WS=$(yabai -m query --spaces | jq -c "[.[] | select ((.windows | length > 0) and .display == ${CURRENT_DISPLAY} and .index > ${CURR_WS}) | .index ] | .[0]")
   TARGET_WIN=$(yabai -m query --spaces | jq -c ".[] | select (.index == ${NEXT_WS}) | .windows | .[0] ")
   yabai -m window --focus "$TARGET_WIN"
 }
 
 function switch_prev_workspace() {
   CURR_WS=$(current_workspace_index)
+  CURRENT_DISPLAY=$(yabai -m query --spaces --space | jq -c ".display")
   #selects next nonempty index
-  PREV_WS=$(yabai -m query --spaces | jq -c "reverse | [.[] | select ((.windows | length > 0) and .index < ${CURR_WS}) | .index ] | .[0]")
+  PREV_WS=$(yabai -m query --spaces | jq -c "reverse | [.[] | select ((.windows | length > 0) and .index < ${CURR_WS} and .display == ${CURRENT_DISPLAY}) | .index ] | .[0]")
   TARGET_WIN=$(yabai -m query --spaces | jq -c ".[] | select (.index == ${PREV_WS}) | .windows | .[0] ")
   yabai -m window --focus "$TARGET_WIN"
 }
@@ -51,7 +53,7 @@ function moveto_prev_workspace() {
 }
 
 function switch_audio_output() {
-  ALLOWED="External Headphones|MacBook Pro Speakers"
+  ALLOWED="External Headphones|MacBook Pro Speakers|TREBLAB Z2"
   CURR=$(SwitchAudioSource -c)
   OUT=$(SwitchAudioSource -a -t output |
     sed "s/ (output)//g" |

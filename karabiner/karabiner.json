@@ -193,7 +193,7 @@
                                 },
                                 "to": [
                                     {
-                                        "key_code": "f15"
+                                        "key_code": "f17"
                                     }
                                 ],
                                 "type": "basic"

@@ -1,8 +1,8 @@
 #change focus
-rctrl - j : yabai -m window --focus west || source ~/.config/skhd/helper.sh && switch_display
-rctrl - k : yabai -m window --focus south || source ~/.config/skhd/helper.sh && switch_next_workspace
-rctrl - i : yabai -m window --focus north || source ~/.config/skhd/helper.sh && switch_prev_workspace
-rctrl - l : yabai -m window --focus east || source ~/.config/skhd/helper.sh && switch_display
+rctrl - j : yabai -m window --focus west || (source ~/.config/skhd/helper.sh && yabai -m display --focus 1)
+rctrl - k : yabai -m window --focus south || (source ~/.config/skhd/helper.sh && switch_next_workspace)
+rctrl - i : yabai -m window --focus north || (source ~/.config/skhd/helper.sh && switch_prev_workspace)
+rctrl - l : yabai -m window --focus east || (source ~/.config/skhd/helper.sh && yabai -m display --focus 2)
 
 #swap windows in tile layout
 shift + rctrl - j : yabai -m window --warp west
