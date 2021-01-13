@@ -6,7 +6,7 @@ echo Hello > /tmp/hello
 yabai -m config layout bsp
 yabai -m config window_placement second_child
 
-WG=7
+WG=9
 yabai -m config top_padding    $WG
 yabai -m config bottom_padding $WG
 yabai -m config left_padding   $WG

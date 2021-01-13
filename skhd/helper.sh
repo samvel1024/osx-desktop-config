@@ -53,7 +53,7 @@ function moveto_prev_workspace() {
 }
 
 function switch_audio_output() {
-  ALLOWED="External Headphones|MacBook Pro Speakers|TREBLAB Z2"
+  ALLOWED="Bose QuietComfort 35 Series 2|External Headphones|MacBook Pro Speakers|TREBLAB Z2|Navshnik"
   CURR=$(SwitchAudioSource -c)
   OUT=$(SwitchAudioSource -a -t output |
     sed "s/ (output)//g" |
@@ -62,6 +62,46 @@ function switch_audio_output() {
   echo "$OUT"
   OUT=$(echo "$OUT" && echo "$OUT")
   TARGET=$(echo "$OUT" | sed -n "/$CURR/,\$p" | sed 1d | head -n1)
+  echo "${TARGET}"
   NOTIF=$(SwitchAudioSource -s "$TARGET" | sed "s/\"//g")
   osascript -e "display notification \"$NOTIF\" with title \"SKHD\""
 }
+
+function try_moveto_secondary_singleton() {
+  moveto_secondary_singleton || moveto_next_display
+}
+
+function moveto_secondary_singleton() {
+  CURRENT_DISPLAY=$(yabai -m query --spaces --space | jq -c ".display")
+  WIN=$(current_window)
+  NEXT_WS=$(yabai -m query --spaces | jq -c "[.[] | select ((.windows | length == 0) and .display == 2) | .index ] | .[0]")
+  yabai -m window --space "$NEXT_WS" &&
+    yabai -m window --focus "$WIN"
+}
+
+function connect_headphones() {
+  DEVICE='Navshnik'
+  STATUS=$(blueutil --is-connected $DEVICE)
+  if [ "$STATUS" = '1' ]; then
+    blueutil --disconnect "${DEVICE}"
+  fi
+  (blueutil --connect "${DEVICE}" &&
+    osascript -e "display notification \"Connected to headphones\" with title \"SKHD\"") ||
+    osascript -e "display notification \"Failed to connect to headphones\" with title \"SKHD\""
+
+}
+
+
+function shorten_clipboard() {
+  TOKEN="8628c3971a606e217c8f8fee764b058f8b44c8c5"
+  echo "{\"long_url\":\"$(pbpaste)}\"}" |\
+	 http POST https://api-ssl.bitly.com/v4/shorten  "Authorization: Bearer ${TOKEN}" |\
+	 jq -r ".link" |\
+	 pbcopy &&\
+         osascript -e "display notification \"Url shortened $(pbpaste)\" with title \"SKHD\""
+}
+
+function desk_light_on() {
+  curl http://192.168.0.94/toggle 	
+}
+
